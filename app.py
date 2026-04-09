@@ -109,5 +109,8 @@ with app.app_context():
 
 # --- LANCEMENT DU SERVEUR ---
 if __name__ == '__main__':
+    import os
+    port = int(os.environ.get('PORT', 5000))  # Render fournit le port via une variable d'environnement
+    app.run(host='0.0.0.0', port=port)
     # debug=True permet de voir les erreurs en direct et de recharger automatiquement
     app.run(debug=True)
