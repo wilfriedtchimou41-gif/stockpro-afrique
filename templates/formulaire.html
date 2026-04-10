@@ -8,47 +8,48 @@
                 <h4 class="mb-0">➕ Ajouter une Marchandise</h4>
             </div>
             <div class="card-body">
-                <form method="POST">
+                <form action={% if produit%}{{ url_for('update_produit', id=produit.id) }}{% else %}{{ url_for('ajouter') }}{% endif %} method="POST" autocomplete="off">
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Nom du produit</label>
-                            <input type="text" name="nom" class="form-control" required placeholder="Ex: Ordinateur Portable">
+                            <input type="text" name="nom" class="form-control" value="{{ produit.nom if produit else '' }}" required placeholder="Ex: Ordinateur Portable">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Référence</label>
-                            <input type="text" name="reference" class="form-control" required placeholder="Ex: REF-001">
+                            <input type="text" name="reference" class="form-control" value="{{ produit.reference if produit else '' }}" autocomplete="off">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Prix (FCFA)</label>
-                            <input type="number" step="0.01" name="prix" class="form-control" required>
+                            <input type="number" step="0.01" name="prix" class="form-control" value="{{ produit.reference if produit else '' }}" autocomplete="off">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Quantité</label>
-                            <input type="number" name="quantite" class="form-control" required value="0">
+                            <input type="number" name="quantite" class="form-control" value="{{ produit.reference if produit else '' }}" autocomplete="off">
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Catégorie</label>
                         <select name="categorie" class="form-select">
-                            <option value="Électronique">Électronique</option>
-                            <option value="Vêtements">Vêtements</option>
-                            <option value="Autre">Autre</option>
+                            <option value="Électronique" {% if produit and produit.categorie == 'Électronique' %}selected{% endif %}>Électronique</option>
+                            <option value="Vêtements" {% if produit and produit.categorie == 'Vêtements' %}selected{% endif %}>Vêtements</option>
+                            <option value="Alimentation" {% if produit and produit.categorie == 'Alimentation' %}selected{% endif %}>Alimentation</option>
+                            <option value="Autre" {% if produit and produit.categorie == 'Autre' %}selected{% endif %}>Autre</option>
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">URL de l'image</label>
-                        <input type="url" name="image_url" class="form-control" placeholder="https://exemple.com/image.jpg" required>
+                        <input type="url" name="image_url" class="form-control" value="{{ produit.image_url if produit else '' }}" placeholder="https://exemple.com/image.jpg" required>
                         <div class="form-text">Collez un lien d'image (clic droit sur une image Google > Copier l'adresse de l'image).</div>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Description</label>
-                        <textarea name="description" class="form-control" rows="3"></textarea>
+                        <textarea name="description" class="form-control" rows="3">{{ produit.description if produit else '' }}</textarea>
                     </div>
 
                     <div class="d-grid gap-2">

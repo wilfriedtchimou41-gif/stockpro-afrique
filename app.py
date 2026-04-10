@@ -101,6 +101,49 @@ def supprimer(id):
     except:
         flash('❌ Erreur lors de la suppression.', 'danger')
         return redirect(url_for('index'))
+    
+# ==========================================
+# 4. Modification (Modifier une marchandise)
+# ==========================================
+
+# Route pour afficher le formulaire de modification
+@app.route('/edit/<int:id>')
+def edit(id):
+    produit_a_modifier = Produit.query.get_or_404(id)
+    # On passe le produit au template pour pré-remplir le formulaire
+    return render_template('formulaire.html', produit=produit_a_modifier, action="modifier")
+
+# Route pour traiter la modification
+@app.route('/update/<int:id>', methods=['POST'])
+def update_produit(id):
+    produit_a_modifier = Produit.query.get_or_404(id)
+    try:
+        print ("DONNEE RECUES : ", request.form)  # Debug : Affiche les données reçues du formulaire
+
+        produit_a_modifier.nom = request.form['nom']
+        
+        db.session.add(produit_a_modifier)  # On ajoute l'objet à la session pour le suivre
+        produit_a_modifier.nom = request.form['nom']
+        produit_a_modifier.reference = request.form['reference']
+        produit_a_modifier.quantite = request.form['quantite']
+        produit_a_modifier.prix = request.form['prix']
+        produit_a_modifier.categorie = request.form['categorie']
+        produit_a_modifier.description = request.form['description']
+        produit_a_modifier.image_url = request.form['image_url']
+        
+        db.session.commit()
+        flash('✅ Produit modifié avec succès !', 'success')
+        return redirect(url_for('index'))
+    except Exception as e:
+        db.session.rollback()
+        flash('❌ Erreur lors de la modification.', 'danger')
+        return redirect(url_for('index'))
+        
+    except Exception as e:
+        db.session.rollback()
+        flash('❌ Erreur lors de la modification.', 'danger')
+        return redirect(url_for('index'))
+    
 
 # --- INITIALISATION DE LA BASE DE DONNÉES ---
 # Cette partie crée les tables si elles n'existent pas
@@ -113,4 +156,4 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))  # Render fournit le port via une variable d'environnement
     app.run(host='0.0.0.0', port=port)
     # debug=True permet de voir les erreurs en direct et de recharger automatiquement
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False, port=5001)
